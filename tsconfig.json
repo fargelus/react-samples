@@ -23,6 +23,6 @@
     "./node_modules"
   ],
   "include": [
-    "src/hello-react-world/**/*.ts"
+    "src/**/*.ts",
   ]
 }
