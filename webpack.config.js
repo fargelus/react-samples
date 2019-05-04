@@ -22,7 +22,7 @@ module.exports = {
   },
 
   output: {
-    filename: '[name].js',
+    filename: '[name]/[name].js',
     publicPath: makeAbsolutePath('build'),
     path: makeAbsolutePath('build'),
   },
@@ -47,6 +47,7 @@ module.exports = {
     new CopyWebpackPlugin([
       {
         from: 'src/hello-react-world/index.html',
+        to: 'hello-react',
       }
     ])
   ],
