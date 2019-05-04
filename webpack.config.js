@@ -12,6 +12,7 @@ module.exports = {
 
   entry: {
     'hello-react': makeAbsolutePath('src/hello-react-world/hello-react.ts'),
+    counter: makeAbsolutePath('src/counter/counter.ts'),
   },
 
   devServer: {
@@ -25,6 +26,19 @@ module.exports = {
     filename: '[name]/[name].js',
     publicPath: makeAbsolutePath('build'),
     path: makeAbsolutePath('build'),
+  },
+
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          chunks: "initial",
+          name: "vendor",
+          test: "vendor",
+          enforce: true
+        },
+      },
+    },
   },
 
   devtool: 'source-map',
@@ -48,6 +62,13 @@ module.exports = {
       title: 'Hello React World',
       template: 'src/index.ejs',
       filename: 'hello-react/index.html',
-    })
+      chunks: ['hello-react'],
+    }),
+    new HTMLWebpackPlugin({
+      title: 'Counter Button',
+      template: 'src/index.ejs',
+      filename: 'counter/index.html',
+      chunks: ['counter'],
+    }),
   ],
 };
