@@ -1,7 +1,6 @@
 const path = require('path');
 
 // Plugins
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 function makeAbsolutePath(filepath) {
@@ -12,10 +11,11 @@ module.exports = {
   mode: 'development',
 
   entry: {
-    'hello-react': makeAbsolutePath('hello-react-world/ts/hello-react.ts'),
+    'hello-react': makeAbsolutePath('src/hello-react-world/ts/hello-react.ts'),
   },
 
   devServer: {
+    contentBase: path.join(__dirname, 'build'),
     port: 3000,
   },
 
@@ -42,10 +42,9 @@ module.exports = {
   },
 
   plugins: [
-    new CleanWebpackPlugin(),
     new CopyWebpackPlugin([
       {
-        from: './hello-react-world/index.html',
+        from: 'src/hello-react-world/index.html',
       }
     ])
   ],
