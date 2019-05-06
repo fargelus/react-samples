@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Counter from './counter';
+import ButtonCounter from './button-counter';
 
 ReactDOM.render(
-  <Counter/>,
+  <ButtonCounter/>,
   document.getElementById('app'),
 );
