@@ -12,7 +12,7 @@ module.exports = {
 
   entry: {
     'hello-react': makeAbsolutePath('src/hello-react-world/hello-react.ts'),
-    counter: makeAbsolutePath('src/counter/counter.ts'),
+    counter: makeAbsolutePath('src/counter/main.tsx'),
   },
 
   devServer: {
