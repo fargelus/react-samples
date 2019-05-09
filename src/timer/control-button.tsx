@@ -1,8 +1,11 @@
 import React from 'react';
 
 const ControlButton = (props: any) => {
+  const attrs = Object.assign({}, props);
+  const classes = 'btn ' + (props.className || 'btn-primary');
+  attrs.className = classes;
   return (
-      <button onClick={props.onClick} className="btn btn-primary" type="button">
+      <button {...attrs} type="button">
         { props.children }
       </button>
     );

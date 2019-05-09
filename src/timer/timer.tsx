@@ -7,6 +7,7 @@ interface ITimerState {
   firstTime: number;
   secondTime: number;
   thirdTime: number;
+  additionalAttrs: object;
 }
 
 class Timer extends React.Component<{}, ITimerState> {
@@ -23,10 +24,13 @@ class Timer extends React.Component<{}, ITimerState> {
       firstTime: 5,
       secondTime: 10,
       thirdTime: 15,
+      additionalAttrs: {
+        disabled: 'disabled',
+      },
     };
 
     this.timerStyle = {
-     maxWidth: '250px',
+     maxWidth: '350px',
      margin: '35px auto',
      display: 'flex',
      flexDirection: 'column',
@@ -43,31 +47,73 @@ class Timer extends React.Component<{}, ITimerState> {
    this.screenStyle = {
      alignSelf: 'center',
    };
+
+   this.tick = this.tick.bind(this);
   }
 
-  private tick(time: number) {
+  private setTime(time: number) {
     this.setState({
       currentTime: time,
+      additionalAttrs: {},
     });
   }
 
+  private tick() {
+    let time = this.state.currentTime;
+
+    const tickTime = () => {
+      --time;
+
+      this.setState({
+        currentTime: time,
+      });
+    };
+
+    tickTime();
+    const intervalId = setInterval(() => {
+      tickTime();
+
+      if (time === 0) {
+        this.setState({
+          additionalAttrs: {
+            disabled: 'disabled',
+          }
+        });
+
+        clearInterval(intervalId);
+      }
+    }, 1000);
+  }
+
   public render() {
-    const { currentTime, firstTime, secondTime, thirdTime } = this.state;
+    const {
+      currentTime,
+      firstTime,
+      secondTime,
+      thirdTime,
+      additionalAttrs } = this.state;
 
     return (
       <div style={this.timerStyle}>
         <Screen style={this.screenStyle}>{ currentTime }</Screen>
         <div style={this.controlStyle}>
-          <ControlButton onClick={this.tick.bind(this, firstTime)}>
+          <ControlButton onClick={this.setTime.bind(this, firstTime)}>
             { firstTime } сек
           </ControlButton>
 
-          <ControlButton onClick={this.tick.bind(this, secondTime)}>
+          <ControlButton onClick={this.setTime.bind(this, secondTime)}>
             { secondTime } сек
           </ControlButton>
 
-          <ControlButton onClick={this.tick.bind(this, thirdTime)}>
+          <ControlButton onClick={this.setTime.bind(this, thirdTime)}>
             { thirdTime } сек
+          </ControlButton>
+
+          <ControlButton
+            {...additionalAttrs}
+            className="btn-success"
+            onClick={this.tick}>
+              Старт
           </ControlButton>
         </div>
     </div>);
