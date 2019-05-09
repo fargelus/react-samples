@@ -13,6 +13,7 @@ module.exports = {
   entry: {
     'hello-react': makeAbsolutePath('src/hello-react-world/hello-react.ts'),
     counter: makeAbsolutePath('src/counter/main.tsx'),
+    timer: makeAbsolutePath('src/timer/render.tsx'),
   },
 
   devServer: {
@@ -69,6 +70,12 @@ module.exports = {
       template: 'src/index.ejs',
       filename: 'counter/index.html',
       chunks: ['counter'],
+    }),
+    new HTMLWebpackPlugin({
+      title: 'Timer',
+      template: 'src/index.ejs',
+      filename: 'timer/index.html',
+      chunks: ['timer'],
     }),
   ],
 };
