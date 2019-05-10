@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Timer from './timer';
+import Timer from './components/timer';
 
 ReactDOM.render(
   <Timer/>,
