@@ -8,6 +8,7 @@ interface ITimerState {
   secondTime: number;
   thirdTime: number;
   additionalAttrs: object;
+  activeBtnID: number;
 }
 
 class Timer extends React.Component<{}, ITimerState> {
@@ -25,30 +26,13 @@ class Timer extends React.Component<{}, ITimerState> {
       additionalAttrs: {
         disabled: 'disabled',
       },
+      activeBtnID: -1,
     };
 
    this.timerID = -1;
 
-   this.makeBtnActive = this.makeBtnActive.bind(this);
    this.tick = this.tick.bind(this);
    this.stopTick = this.stopTick.bind(this);
-  }
-
-  private setTime(time: number) {
-    this.setState({
-      currentTime: time,
-      additionalAttrs: {},
-    });
-  }
-
-  private makeBtnActive(ev: any) {
-    const parent = ev.currentTarget;
-    Array.prototype.forEach.call(parent.children, (el: any) => {
-      el.classList.remove('active');
-    });
-
-    const current = ev.target;
-    current.classList.add('active');
   }
 
   private tick() {
@@ -68,11 +52,11 @@ class Timer extends React.Component<{}, ITimerState> {
 
       if (time === 0) {
         this.setState({
+          activeBtnID: -1,
           additionalAttrs: {
             disabled: 'disabled',
-          }
+          },
         });
-
         this.stopTick();
       }
     }, 1000);
@@ -88,24 +72,25 @@ class Timer extends React.Component<{}, ITimerState> {
       firstTime,
       secondTime,
       thirdTime,
-      additionalAttrs } = this.state;
+      additionalAttrs,
+      activeBtnID } = this.state;
+
+    const timerBtns = [firstTime, secondTime, thirdTime].map((time, index) =>
+        <ControlButton
+          className={'mr-2' + (index === activeBtnID ? ' active' : '')}
+          id={`btn-${index}`}
+          onClick={this.setTime.bind(this, time)}
+          key={index}>
+            {time} сек
+          </ControlButton>
+    );
 
     return (
       <div className="d-flex flex-column align-items-center m-auto pt-5">
         <Screen>{ currentTime }</Screen>
         <div className="d-flex flex-column align-items-center">
-          <div onClick={this.makeBtnActive} className="mt-2">
-            <ControlButton className="mr-2" onClick={this.setTime.bind(this, firstTime)}>
-              { firstTime } сек
-            </ControlButton>
-
-            <ControlButton className="mr-2" onClick={this.setTime.bind(this, secondTime)}>
-              { secondTime } сек
-            </ControlButton>
-
-            <ControlButton className="mr-2" onClick={this.setTime.bind(this, thirdTime)}>
-              { thirdTime } сек
-            </ControlButton>
+          <div className="mt-2">
+            { timerBtns }
           </div>
 
           <div className="mt-2">
@@ -124,6 +109,19 @@ class Timer extends React.Component<{}, ITimerState> {
           </div>
         </div>
     </div>);
+  }
+
+  private setTime(time: number, ev: any) {
+    const activeID: number = Timer.getIDNumber(ev.target);
+    this.setState({
+      currentTime: time,
+      additionalAttrs: {},
+      activeBtnID: activeID,
+    });
+  }
+
+  static getIDNumber(node: any) {
+    return +node.getAttribute('id').match(/[0-9]/)[0];
   }
 }
 
