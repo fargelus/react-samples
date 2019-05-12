@@ -1,5 +1,5 @@
 import React from 'react';
-import ControlButton from "./control-button";
+import TimerButton from "./timer-button";
 import Screen from "./screen";
 
 interface ITimerState {
@@ -7,7 +7,6 @@ interface ITimerState {
   firstTime: number;
   secondTime: number;
   thirdTime: number;
-  additionalAttrs: object;
   activeBtnID: number;
 }
 
@@ -23,9 +22,6 @@ class Timer extends React.Component<{}, ITimerState> {
       firstTime: 5,
       secondTime: 10,
       thirdTime: 15,
-      additionalAttrs: {
-        disabled: 'disabled',
-      },
       activeBtnID: -1,
     };
 
@@ -52,10 +48,7 @@ class Timer extends React.Component<{}, ITimerState> {
 
       if (time === 0) {
         this.setState({
-          activeBtnID: -1,
-          additionalAttrs: {
-            disabled: 'disabled',
-          },
+          activeBtnID: -1
         });
         this.stopTick();
       }
@@ -72,17 +65,16 @@ class Timer extends React.Component<{}, ITimerState> {
       firstTime,
       secondTime,
       thirdTime,
-      additionalAttrs,
       activeBtnID } = this.state;
 
-    const timerBtns = [firstTime, secondTime, thirdTime].map((time, index) =>
-        <ControlButton
+    const timeBtns = [firstTime, secondTime, thirdTime].map((time, index) =>
+        <TimerButton
           className={'mr-2' + (index === activeBtnID ? ' active' : '')}
           id={`btn-${index}`}
           onClick={this.setTime.bind(this, time)}
           key={index}>
             {time} сек
-          </ControlButton>
+          </TimerButton>
     );
 
     return (
@@ -90,22 +82,21 @@ class Timer extends React.Component<{}, ITimerState> {
         <Screen>{ currentTime }</Screen>
         <div className="d-flex flex-column align-items-center">
           <div className="mt-2">
-            { timerBtns }
+            { timeBtns }
           </div>
 
           <div className="mt-2">
-            <ControlButton
-              {...additionalAttrs}
+            <TimerButton
               onClick={this.tick}
               className="btn-success mr-2">
                 Старт
-            </ControlButton>
+            </TimerButton>
 
-            <ControlButton
+            <TimerButton
               className="btn-danger"
               onClick={this.stopTick}>
                 Стоп
-            </ControlButton>
+            </TimerButton>
           </div>
         </div>
     </div>);
@@ -115,7 +106,6 @@ class Timer extends React.Component<{}, ITimerState> {
     const activeID: number = Timer.getIDNumber(ev.target);
     this.setState({
       currentTime: time,
-      additionalAttrs: {},
       activeBtnID: activeID,
     });
   }

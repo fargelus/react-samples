@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ControlButton = (props: any) => {
+const TimerButton = (props: any) => {
   const getCustomClasses = () => {
     const { className } = props;
     const isExist = typeof className === 'string';
@@ -18,4 +18,4 @@ const ControlButton = (props: any) => {
     );
 }
 
-export default ControlButton;
+export default TimerButton;
