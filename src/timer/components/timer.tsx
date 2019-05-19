@@ -14,6 +14,8 @@ interface ITimerState {
 class Timer extends React.Component<{}, ITimerState> {
   public readonly state: Readonly<ITimerState>;
   private timerID: number;
+  private startBtnID: string;
+  private stopBtnID: string;
 
   public constructor(props: {}) {
     super(props);
@@ -26,8 +28,9 @@ class Timer extends React.Component<{}, ITimerState> {
       activeBtnID: -1,
       enabledControlBtns: [],
     };
-
    this.timerID = -1;
+   this.startBtnID = 'start';
+   this.stopBtnID = 'stop';
 
    this.tick = this.tick.bind(this);
    this.stopTick = this.stopTick.bind(this);
@@ -37,7 +40,7 @@ class Timer extends React.Component<{}, ITimerState> {
     let time = this.state.currentTime;
 
     this.setState({
-      enabledControlBtns: ['stop-btn'],
+      enabledControlBtns: [this.stopBtnID],
     });
 
     const tickTime = () => {
@@ -66,7 +69,7 @@ class Timer extends React.Component<{}, ITimerState> {
     clearInterval(this.timerID);
     if (ev) {
       this.setState({
-        enabledControlBtns: ['start-btn'],
+        enabledControlBtns: [this.startBtnID],
       });
     }
   }
@@ -86,16 +89,16 @@ class Timer extends React.Component<{}, ITimerState> {
           <div className="mt-2">
             <TimerButton
               onClick={this.tick}
-              id="start-btn"
-              disabled={!enabledControlBtns.includes('start-btn')}
+              id={this.startBtnID}
+              disabled={!enabledControlBtns.includes(this.startBtnID)}
               className="btn-success mr-2">
                 Старт
             </TimerButton>
 
             <TimerButton
               className="btn-danger"
-              id="stop-btn"
-              disabled={!enabledControlBtns.includes('stop-btn')}
+              id={this.stopBtnID}
+              disabled={!enabledControlBtns.includes(this.stopBtnID)}
               onClick={this.stopTick}>
                 Стоп
             </TimerButton>
@@ -129,7 +132,7 @@ class Timer extends React.Component<{}, ITimerState> {
     this.setState({
       currentTime: time,
       activeBtnID: activeID,
-      enabledControlBtns: ['start-btn'],
+      enabledControlBtns: [this.startBtnID],
     });
   }
 
