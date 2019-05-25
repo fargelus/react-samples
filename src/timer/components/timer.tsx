@@ -37,36 +37,36 @@ class Timer extends React.Component<{}, ITimerState> {
   }
 
   private tick() {
-    let time = this.state.currentTime;
-
     this.setState({
       enabledControlBtns: [this.stopBtnID],
     });
 
-    const tickTime = () => {
+    let time = this.state.currentTime;
+    const updateTimeState = () => {
       --time;
 
       this.setState({
         currentTime: time,
       });
     };
+    updateTimeState();
 
-    tickTime();
     this.timerID = setInterval(() => {
-      tickTime();
-
-      if (time === 0) {
-        this.setState({
-          activeBtnID: -1,
-          enabledControlBtns: [],
-        });
-        this.stopTick();
-      }
+      time === 0 ? this.timeout() : updateTimeState();
     }, 1000);
+  }
+
+  private timeout() {
+    this.setState({
+      activeBtnID: -1,
+      enabledControlBtns: [],
+    });
+    this.stopTick();
   }
 
   private stopTick(ev?: any) {
     clearInterval(this.timerID);
+
     if (ev) {
       this.setState({
         enabledControlBtns: [this.startBtnID],
