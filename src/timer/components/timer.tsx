@@ -5,16 +5,14 @@ import TimerSetup from "./timer-setup";
 
 interface ITimerState {
   currentTime: number;
-  firstTime: number;
-  secondTime: number;
-  thirdTime: number;
   activeBtnID: number;
+  timers: string[];
   enabledControlBtns: string[];
 }
 
 class Timer extends React.Component<{}, ITimerState> {
   public readonly state: Readonly<ITimerState>;
-  private timerID: number;
+  private currentTimerIntervalID: number;
   private startBtnID: string;
   private stopBtnID: string;
   private timerSetupStyles: object;
@@ -24,23 +22,23 @@ class Timer extends React.Component<{}, ITimerState> {
 
     this.state = {
       currentTime: 0,
-      firstTime: 5,
-      secondTime: 10,
-      thirdTime: 15,
       activeBtnID: -1,
       enabledControlBtns: [],
+      timers: ['5 сек', '10 сек', '15 сек'],
     };
-   this.timerID = -1;
-   this.startBtnID = 'start';
-   this.stopBtnID = 'stop';
-   this.timerSetupStyles = {
-     position: 'absolute',
-     left: 'calc(100% + 20px)'
-   };
 
-   this.tick = this.tick.bind(this);
-   this.stopTick = this.stopTick.bind(this);
-   this.stopBtnClick = this.stopBtnClick.bind(this);
+    this.currentTimerIntervalID = -1;
+    this.startBtnID = 'start';
+    this.stopBtnID = 'stop';
+    this.timerSetupStyles = {
+      position: 'absolute',
+      left: 'calc(100% + 20px)'
+    };
+
+    this.rmTimer = this.rmTimer.bind(this);
+    this.tick = this.tick.bind(this);
+    this.stopTick = this.stopTick.bind(this);
+    this.stopBtnClick = this.stopBtnClick.bind(this);
   }
 
   public render() {
@@ -55,7 +53,7 @@ class Timer extends React.Component<{}, ITimerState> {
             { timeBtns }
 
             <div style={this.timerSetupStyles}>
-              <TimerSetup/>
+              <TimerSetup onChange={this.rmTimer} timers={this.state.timers}/>
             </div>
           </div>
 
@@ -80,27 +78,35 @@ class Timer extends React.Component<{}, ITimerState> {
     </div>);
   }
 
+  private rmTimer(ev: any) {
+    const target = ev.value;
+    let { timers } = this.state;
+    timers = timers.filter(timer => timer !== target);
+    this.setState({
+      timers: timers
+    });
+  }
+
   private createTimeBtns() {
     const {
-      firstTime,
-      secondTime,
-      thirdTime,
-      activeBtnID
+      activeBtnID,
+      timers,
     } = this.state;
 
-    return [ firstTime, secondTime, thirdTime ].map((time, index) =>
+    return timers.map((time, index) =>
         <TimerButton
           className={'mr-2' + (index === activeBtnID ? ' active' : '')}
           id={`btn-${index}`}
           onClick={this.setTime.bind(this, time)}
           key={index}>
-            {time} сек
+            {time}
           </TimerButton>
     );
   }
 
-  private setTime(time: number, ev: any) {
+  private setTime(timeHTML: string, ev: any) {
     const activeID: number = Timer.getIDNumber(ev.target);
+    const time = parseInt(timeHTML);
     this.stopTick();
     this.setState({
       currentTime: time,
@@ -128,7 +134,7 @@ class Timer extends React.Component<{}, ITimerState> {
     };
     updateTimeState();
 
-    this.timerID = setInterval(() => {
+    this.currentTimerIntervalID = setInterval(() => {
       time === 0 ? this.timeout() : updateTimeState();
     }, 1000);
   }
@@ -142,7 +148,7 @@ class Timer extends React.Component<{}, ITimerState> {
   }
 
   private stopTick() {
-    clearInterval(this.timerID);
+    clearInterval(this.currentTimerIntervalID);
   }
 
   private stopBtnClick() {
