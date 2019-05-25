@@ -34,44 +34,7 @@ class Timer extends React.Component<{}, ITimerState> {
 
    this.tick = this.tick.bind(this);
    this.stopTick = this.stopTick.bind(this);
-  }
-
-  private tick() {
-    this.setState({
-      enabledControlBtns: [this.stopBtnID],
-    });
-
-    let time = this.state.currentTime;
-    const updateTimeState = () => {
-      --time;
-
-      this.setState({
-        currentTime: time,
-      });
-    };
-    updateTimeState();
-
-    this.timerID = setInterval(() => {
-      time === 0 ? this.timeout() : updateTimeState();
-    }, 1000);
-  }
-
-  private timeout() {
-    this.setState({
-      activeBtnID: -1,
-      enabledControlBtns: [],
-    });
-    this.stopTick();
-  }
-
-  private stopTick(ev?: any) {
-    clearInterval(this.timerID);
-
-    if (ev) {
-      this.setState({
-        enabledControlBtns: [this.startBtnID],
-      });
-    }
+   this.stopBtnClick = this.stopBtnClick.bind(this);
   }
 
   public render() {
@@ -99,7 +62,7 @@ class Timer extends React.Component<{}, ITimerState> {
               className="btn-danger"
               id={this.stopBtnID}
               disabled={!enabledControlBtns.includes(this.stopBtnID)}
-              onClick={this.stopTick}>
+              onClick={this.stopBtnClick}>
                 Стоп
             </TimerButton>
           </div>
@@ -138,6 +101,45 @@ class Timer extends React.Component<{}, ITimerState> {
 
   static getIDNumber(node: any) {
     return +node.getAttribute('id').match(/[0-9]/)[0];
+  }
+
+  private tick() {
+    this.setState({
+      enabledControlBtns: [this.stopBtnID],
+    });
+
+    let time = this.state.currentTime;
+    const updateTimeState = () => {
+      --time;
+
+      this.setState({
+        currentTime: time,
+      });
+    };
+    updateTimeState();
+
+    this.timerID = setInterval(() => {
+      time === 0 ? this.timeout() : updateTimeState();
+    }, 1000);
+  }
+
+  private timeout() {
+    this.setState({
+      activeBtnID: -1,
+      enabledControlBtns: [],
+    });
+    this.stopTick();
+  }
+
+  private stopTick() {
+    clearInterval(this.timerID);
+  }
+
+  private stopBtnClick() {
+    this.stopTick();
+    this.setState({
+      enabledControlBtns: [this.startBtnID],
+    });
   }
 }
 
