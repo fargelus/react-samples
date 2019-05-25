@@ -1,6 +1,7 @@
 import React from 'react';
 import TimerButton from "./timer-button";
 import Screen from "./screen";
+import TimerSetup from "./timer-setup";
 
 interface ITimerState {
   currentTime: number;
@@ -16,6 +17,7 @@ class Timer extends React.Component<{}, ITimerState> {
   private timerID: number;
   private startBtnID: string;
   private stopBtnID: string;
+  private timerSetupStyles: object;
 
   public constructor(props: {}) {
     super(props);
@@ -31,6 +33,10 @@ class Timer extends React.Component<{}, ITimerState> {
    this.timerID = -1;
    this.startBtnID = 'start';
    this.stopBtnID = 'stop';
+   this.timerSetupStyles = {
+     position: 'absolute',
+     left: 'calc(100% + 20px)'
+   };
 
    this.tick = this.tick.bind(this);
    this.stopTick = this.stopTick.bind(this);
@@ -45,8 +51,12 @@ class Timer extends React.Component<{}, ITimerState> {
       <div className="d-flex flex-column align-items-center m-auto pt-5">
         <Screen>{ currentTime }</Screen>
         <div className="d-flex flex-column align-items-center">
-          <div className="mt-2">
+          <div className="mt-2 d-flex align-items-center position-relative">
             { timeBtns }
+
+            <div style={this.timerSetupStyles}>
+              <TimerSetup/>
+            </div>
           </div>
 
           <div className="mt-2">
